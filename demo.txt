@@ -1,0 +1,1408 @@
+add_ruff_up_flag.py:1:1: D100 Missing docstring in public module
+add_ruff_up_flag.py:73:5: D103 Missing docstring in public function
+   |
+71 |     return list(Path(start_path).rglob("pyproject.toml"))
+72 |
+73 | def main():
+   |     ^^^^ D103
+74 |     # Get the current directory
+75 |     current_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "node-hub")
+   |
+
+examples/alexk-lcr/bus.py:1:1: D100 Missing docstring in public module
+examples/alexk-lcr/bus.py:26:5: D401 First line of docstring should be in imperative mood: "Wraps joints and their corresponding values into a structured array."
+   |
+24 |       values: Union[int, list[int], pa.Array],
+25 |   ) -> pa.StructArray:
+26 | /     """Wraps joints and their corresponding values into a structured array.
+27 | |
+28 | |     :param joints: A list, numpy array, or pyarrow array of joint names.
+29 | |     :type joints: Union[list[str], np.array, pa.Array]
+30 | |     :param values: A single integer value, or a list, numpy array, or pyarrow array of integer values.
+31 | |                    If a single integer is provided, it will be broadcasted to all joints.
+32 | |     :type values: Union[int, list[int], np.array, pa.Array]
+33 | |
+34 | |     :return: A structured array with two fields:
+35 | |              - "joints": A string field containing the names of the joints.
+36 | |              - "values": An Int32Array containing the values corresponding to the joints.
+37 | |     :rtype: pa.StructArray
+38 | |
+39 | |     :raises ValueError: If lengths of joints and values do not match.
+40 | |
+41 | |     Example:
+42 | |     -------
+43 | |     joints = ["shoulder_pan", "shoulder_lift", "elbow_flex"]
+44 | |     values = [100, 200, 300]
+45 | |     struct_array = wrap_joints_and_values(joints, values)
+46 | |
+47 | |     This example wraps the given joints and their corresponding values into a structured array.
+48 | |
+49 | |     Another example with a single integer value:
+50 | |     joints = ["shoulder_pan", "shoulder_lift", "elbow_flex"]
+51 | |     value = 150
+52 | |     struct_array = wrap_joints_and_values(joints, value)
+53 | |
+54 | |     This example broadcasts the single integer value to all joints and wraps them into a structured array.
+55 | |
+56 | |     """
+   | |_______^ D401
+57 |       if isinstance(values, int):
+58 |           values = [values] * len(joints)
+   |
+
+examples/alexk-lcr/bus.py:76:7: D101 Missing docstring in public class
+   |
+76 | class TorqueMode(enum.Enum):
+   |       ^^^^^^^^^^ D101
+77 |     ENABLED = pa.scalar(1, pa.uint32())
+78 |     DISABLED = pa.scalar(0, pa.uint32())
+   |
+
+examples/alexk-lcr/bus.py:81:7: D101 Missing docstring in public class
+   |
+81 | class OperatingMode(enum.Enum):
+   |       ^^^^^^^^^^^^^ D101
+82 |     VELOCITY = pa.scalar(1, pa.uint32())
+83 |     POSITION = pa.scalar(3, pa.uint32())
+   |
+
+examples/alexk-lcr/bus.py:154:7: D101 Missing docstring in public class
+    |
+154 | class DynamixelBus:
+    |       ^^^^^^^^^^^^ D101
+155 |
+156 |     def __init__(self, port: str, description: dict[str, (int, str)]):
+    |
+
+examples/alexk-lcr/bus.py:156:9: D107 Missing docstring in `__init__`
+    |
+154 | class DynamixelBus:
+155 |
+156 |     def __init__(self, port: str, description: dict[str, (int, str)]):
+    |         ^^^^^^^^ D107
+157 |         self.port = port
+158 |         self.descriptions = description
+    |
+
+examples/alexk-lcr/bus.py:186:9: D102 Missing docstring in public method
+    |
+184 |         self.group_writers = {}
+185 |
+186 |     def close(self):
+    |         ^^^^^ D102
+187 |         self.port_handler.closePort()
+    |
+
+examples/alexk-lcr/bus.py:189:9: D102 Missing docstring in public method
+    |
+187 |         self.port_handler.closePort()
+188 |
+189 |     def write(self, data_name: str, data: pa.StructArray):
+    |         ^^^^^ D102
+190 |         motor_ids = [
+191 |             self.motor_ctrl[motor_name.as_py()]["id"]
+    |
+
+examples/alexk-lcr/bus.py:257:9: D102 Missing docstring in public method
+    |
+255 |             )
+256 |
+257 |     def read(self, data_name: str, motor_names: pa.Array) -> pa.StructArray:
+    |         ^^^^ D102
+258 |         motor_ids = [
+259 |             self.motor_ctrl[motor_name.as_py()]["id"] for motor_name in motor_names
+    |
+
+examples/alexk-lcr/bus.py:300:9: D102 Missing docstring in public method
+    |
+298 |         return wrap_joints_and_values(motor_names, values)
+299 |
+300 |     def write_torque_enable(self, torque_mode: pa.StructArray):
+    |         ^^^^^^^^^^^^^^^^^^^ D102
+301 |         self.write("Torque_Enable", torque_mode)
+    |
+
+examples/alexk-lcr/bus.py:303:9: D102 Missing docstring in public method
+    |
+301 |         self.write("Torque_Enable", torque_mode)
+302 |
+303 |     def write_operating_mode(self, operating_mode: pa.StructArray):
+    |         ^^^^^^^^^^^^^^^^^^^^ D102
+304 |         self.write("Operating_Mode", operating_mode)
+    |
+
+examples/alexk-lcr/bus.py:306:9: D102 Missing docstring in public method
+    |
+304 |         self.write("Operating_Mode", operating_mode)
+305 |
+306 |     def read_position(self, motor_names: pa.Array) -> pa.StructArray:
+    |         ^^^^^^^^^^^^^ D102
+307 |         return self.read("Present_Position", motor_names)
+    |
+
+examples/alexk-lcr/bus.py:309:9: D102 Missing docstring in public method
+    |
+307 |         return self.read("Present_Position", motor_names)
+308 |
+309 |     def read_velocity(self, motor_names: pa.Array) -> pa.StructArray:
+    |         ^^^^^^^^^^^^^ D102
+310 |         return self.read("Present_Velocity", motor_names)
+    |
+
+examples/alexk-lcr/bus.py:312:9: D102 Missing docstring in public method
+    |
+310 |         return self.read("Present_Velocity", motor_names)
+311 |
+312 |     def read_current(self, motor_names: pa.Array) -> pa.StructArray:
+    |         ^^^^^^^^^^^^ D102
+313 |         return self.read("Present_Current", motor_names)
+    |
+
+examples/alexk-lcr/bus.py:315:9: D102 Missing docstring in public method
+    |
+313 |         return self.read("Present_Current", motor_names)
+314 |
+315 |     def write_goal_position(self, goal_position: pa.StructArray):
+    |         ^^^^^^^^^^^^^^^^^^^ D102
+316 |         self.write("Goal_Position", goal_position)
+    |
+
+examples/alexk-lcr/bus.py:318:9: D102 Missing docstring in public method
+    |
+316 |         self.write("Goal_Position", goal_position)
+317 |
+318 |     def write_goal_current(self, goal_current: pa.StructArray):
+    |         ^^^^^^^^^^^^^^^^^^ D102
+319 |         self.write("Goal_Current", goal_current)
+    |
+
+examples/alexk-lcr/bus.py:321:9: D102 Missing docstring in public method
+    |
+319 |         self.write("Goal_Current", goal_current)
+320 |
+321 |     def write_position_p_gain(self, position_p_gain: pa.StructArray):
+    |         ^^^^^^^^^^^^^^^^^^^^^ D102
+322 |         self.write("Position_P_Gain", position_p_gain)
+    |
+
+examples/alexk-lcr/bus.py:324:9: D102 Missing docstring in public method
+    |
+322 |         self.write("Position_P_Gain", position_p_gain)
+323 |
+324 |     def write_position_i_gain(self, position_i_gain: pa.StructArray):
+    |         ^^^^^^^^^^^^^^^^^^^^^ D102
+325 |         self.write("Position_I_Gain", position_i_gain)
+    |
+
+examples/alexk-lcr/bus.py:327:9: D102 Missing docstring in public method
+    |
+325 |         self.write("Position_I_Gain", position_i_gain)
+326 |
+327 |     def write_position_d_gain(self, position_d_gain: pa.StructArray):
+    |         ^^^^^^^^^^^^^^^^^^^^^ D102
+328 |         self.write("Position_D_Gain", position_d_gain)
+    |
+
+examples/alexk-lcr/configure.py:48:5: D103 Missing docstring in public function
+   |
+48 | def pause():
+   |     ^^^^^ D103
+49 |     input("Press Enter to continue...")
+   |
+
+examples/alexk-lcr/configure.py:52:5: D103 Missing docstring in public function
+   |
+52 | def configure_servos(bus: DynamixelBus):
+   |     ^^^^^^^^^^^^^^^^ D103
+53 |     bus.write_torque_enable(
+54 |         wrap_joints_and_values(FULL_ARM, [TorqueMode.DISABLED.value] * 6),
+   |
+
+examples/alexk-lcr/configure.py:70:5: D103 Missing docstring in public function
+   |
+70 | def main():
+   |     ^^^^ D103
+71 |     parser = argparse.ArgumentParser(
+72 |         description="LCR Auto Configure: This program is used to automatically configure the Low Cost Robot (LCR) for "
+   |
+
+examples/alexk-lcr/nodes/interpolate_lcr_to_lcr.py:1:1: D100 Missing docstring in public module
+examples/alexk-lcr/nodes/interpolate_lcr_to_lcr.py:16:5: D103 Missing docstring in public function
+   |
+16 | def main():
+   |     ^^^^ D103
+17 |     parser = argparse.ArgumentParser(
+18 |         description="Interpolation LCR Node: This Dora node is used to calculates appropriate goal positions for the "
+   |
+
+examples/alexk-lcr/nodes/interpolate_lcr_to_record.py:1:1: D100 Missing docstring in public module
+examples/alexk-lcr/nodes/interpolate_lcr_to_record.py:15:5: D103 Missing docstring in public function
+   |
+15 | def main():
+   |     ^^^^ D103
+16 |     parser = argparse.ArgumentParser(
+17 |         description="Interpolation LCR Node: This Dora node is used to calculates appropriate goal positions for the "
+   |
+
+examples/alexk-lcr/nodes/interpolate_lcr_to_simu_lcr.py:1:1: D100 Missing docstring in public module
+examples/alexk-lcr/nodes/interpolate_lcr_to_simu_lcr.py:17:5: D103 Missing docstring in public function
+   |
+17 | def main():
+   |     ^^^^ D103
+18 |     parser = argparse.ArgumentParser(
+19 |         description="Interpolation LCR Node: This Dora node is used to calculates appropriate goal positions for the "
+   |
+
+examples/alexk-lcr/nodes/interpolate_replay_to_lcr.py:1:1: D100 Missing docstring in public module
+examples/alexk-lcr/nodes/interpolate_replay_to_lcr.py:10:5: D103 Missing docstring in public function
+   |
+10 | def main():
+   |     ^^^^ D103
+11 |     parser = argparse.ArgumentParser(
+12 |         description="Interpolation LCR Node: This Dora node is used to calculates appropriate goal positions for the "
+   |
+
+examples/aloha/benchmark/python/dynamixel.py:1:1: D100 Missing docstring in public module
+examples/aloha/benchmark/python/dynamixel.py:12:7: D101 Missing docstring in public class
+   |
+12 | class ReadAttribute(enum.Enum):
+   |       ^^^^^^^^^^^^^ D101
+13 |     TEMPERATURE = 146
+14 |     VOLTAGE = 145
+   |
+
+examples/aloha/benchmark/python/dynamixel.py:24:7: D101 Missing docstring in public class
+   |
+24 | class OperatingMode(enum.Enum):
+   |       ^^^^^^^^^^^^^ D101
+25 |     VELOCITY = 1
+26 |     POSITION = 3
+   |
+
+examples/aloha/benchmark/python/dynamixel.py:32:7: D101 Missing docstring in public class
+   |
+32 | class Dynamixel:
+   |       ^^^^^^^^^ D101
+33 |     ADDR_TORQUE_ENABLE = 64
+34 |     ADDR_GOAL_POSITION = 116
+   |
+
+examples/aloha/benchmark/python/dynamixel.py:43:11: D106 Missing docstring in public nested class
+   |
+42 |     @dataclass
+43 |     class Config:
+   |           ^^^^^^ D106
+44 |         def instantiate(self):
+45 |             return Dynamixel(self)
+   |
+
+examples/aloha/benchmark/python/dynamixel.py:44:13: D102 Missing docstring in public method
+   |
+42 |     @dataclass
+43 |     class Config:
+44 |         def instantiate(self):
+   |             ^^^^^^^^^^^ D102
+45 |             return Dynamixel(self)
+   |
+
+examples/aloha/benchmark/python/dynamixel.py:52:9: D107 Missing docstring in `__init__`
+   |
+50 |         dynamixel_id: int = 1
+51 |
+52 |     def __init__(self, config: Config):
+   |         ^^^^^^^^ D107
+53 |         self.config = config
+54 |         self.connect()
+   |
+
+examples/aloha/benchmark/python/dynamixel.py:56:9: D102 Missing docstring in public method
+   |
+54 |         self.connect()
+55 |
+56 |     def connect(self):
+   |         ^^^^^^^ D102
+57 |         if self.config.device_name == "":
+58 |             for port_name in os.listdir("/dev"):
+   |
+
+examples/aloha/benchmark/python/dynamixel.py:79:9: D102 Missing docstring in public method
+   |
+77 |         return True
+78 |
+79 |     def disconnect(self):
+   |         ^^^^^^^^^^ D102
+80 |         self.portHandler.closePort()
+   |
+
+examples/aloha/benchmark/python/dynamixel.py:82:9: D102 Missing docstring in public method
+   |
+80 |         self.portHandler.closePort()
+81 |
+82 |     def set_goal_position(self, motor_id, goal_position):
+   |         ^^^^^^^^^^^^^^^^^ D102
+83 |         # if self.operating_modes[motor_id] is not OperatingMode.POSITION:
+84 |         #     self._disable_torque(motor_id)
+   |
+
+examples/aloha/benchmark/python/dynamixel.py:97:9: D102 Missing docstring in public method
+   |
+95 |         # print(f'set position of motor {motor_id} to {goal_position}')
+96 |
+97 |     def set_pwm_value(self, motor_id: int, pwm_value, tries=3):
+   |         ^^^^^^^^^^^^^ D102
+98 |         if self.operating_modes[motor_id] is not OperatingMode.PWM:
+99 |             self._disable_torque(motor_id)
+   |
+
+examples/aloha/benchmark/python/dynamixel.py:125:9: D102 Missing docstring in public method
+    |
+123 |             )
+124 |
+125 |     def read_temperature(self, motor_id: int):
+    |         ^^^^^^^^^^^^^^^^ D102
+126 |         return self._read_value(motor_id, ReadAttribute.TEMPERATURE, 1)
+    |
+
+examples/aloha/benchmark/python/dynamixel.py:128:9: D102 Missing docstring in public method
+    |
+126 |         return self._read_value(motor_id, ReadAttribute.TEMPERATURE, 1)
+127 |
+128 |     def read_velocity(self, motor_id: int):
+    |         ^^^^^^^^^^^^^ D102
+129 |         pos = self._read_value(motor_id, ReadAttribute.VELOCITY, 4)
+130 |         if pos > 2**31:
+    |
+
+examples/aloha/benchmark/python/dynamixel.py:135:9: D102 Missing docstring in public method
+    |
+133 |         return pos
+134 |
+135 |     def read_position(self, motor_id: int):
+    |         ^^^^^^^^^^^^^ D102
+136 |         pos = self._read_value(motor_id, ReadAttribute.POSITION, 4)
+137 |         if pos > 2**31:
+    |
+
+examples/aloha/benchmark/python/dynamixel.py:142:9: D102 Missing docstring in public method
+    |
+140 |         return pos
+141 |
+142 |     def read_position_degrees(self, motor_id: int) -> float:
+    |         ^^^^^^^^^^^^^^^^^^^^^ D102
+143 |         return (self.read_position(motor_id) / 4096) * 360
+    |
+
+examples/aloha/benchmark/python/dynamixel.py:145:9: D102 Missing docstring in public method
+    |
+143 |         return (self.read_position(motor_id) / 4096) * 360
+144 |
+145 |     def read_position_radians(self, motor_id: int) -> float:
+    |         ^^^^^^^^^^^^^^^^^^^^^ D102
+146 |         return (self.read_position(motor_id) / 4096) * 2 * math.pi
+    |
+
+examples/aloha/benchmark/python/dynamixel.py:148:9: D102 Missing docstring in public method
+    |
+146 |         return (self.read_position(motor_id) / 4096) * 2 * math.pi
+147 |
+148 |     def read_current(self, motor_id: int):
+    |         ^^^^^^^^^^^^ D102
+149 |         current = self._read_value(motor_id, ReadAttribute.CURRENT, 2)
+150 |         if current > 2**15:
+    |
+
+examples/aloha/benchmark/python/dynamixel.py:154:9: D102 Missing docstring in public method
+    |
+152 |         return current
+153 |
+154 |     def read_present_pwm(self, motor_id: int):
+    |         ^^^^^^^^^^^^^^^^ D102
+155 |         return self._read_value(motor_id, ReadAttribute.PWM, 2)
+    |
+
+examples/aloha/benchmark/python/dynamixel.py:157:9: D102 Missing docstring in public method
+    |
+155 |         return self._read_value(motor_id, ReadAttribute.PWM, 2)
+156 |
+157 |     def read_hardware_error_status(self, motor_id: int):
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^ D102
+158 |         return self._read_value(motor_id, ReadAttribute.HARDWARE_ERROR_STATUS, 1)
+    |
+
+examples/aloha/benchmark/python/dynamixel.py:161:9: D205 1 blank line required between summary line and description
+    |
+160 |       def set_id(self, old_id, new_id, use_broadcast_id: bool = False):
+161 | /         """Sets the id of the dynamixel servo
+162 | |         @param old_id: current id of the servo
+163 | |         @param new_id: new id
+164 | |         @param use_broadcast_id: set ids of all connected dynamixels if True.
+165 | |          If False, change only servo with self.config.id
+166 | |         @return:
+167 | |         """
+    | |___________^ D205
+168 |           if use_broadcast_id:
+169 |               current_id = 254
+    |
+    = help: Insert single blank line
+
+examples/aloha/benchmark/python/dynamixel.py:161:9: D400 First line should end with a period
+    |
+160 |       def set_id(self, old_id, new_id, use_broadcast_id: bool = False):
+161 | /         """Sets the id of the dynamixel servo
+162 | |         @param old_id: current id of the servo
+163 | |         @param new_id: new id
+164 | |         @param use_broadcast_id: set ids of all connected dynamixels if True.
+165 | |          If False, change only servo with self.config.id
+166 | |         @return:
+167 | |         """
+    | |___________^ D400
+168 |           if use_broadcast_id:
+169 |               current_id = 254
+    |
+    = help: Add period
+
+examples/aloha/benchmark/python/dynamixel.py:161:9: D401 First line of docstring should be in imperative mood: "Sets the id of the dynamixel servo"
+    |
+160 |       def set_id(self, old_id, new_id, use_broadcast_id: bool = False):
+161 | /         """Sets the id of the dynamixel servo
+162 | |         @param old_id: current id of the servo
+163 | |         @param new_id: new id
+164 | |         @param use_broadcast_id: set ids of all connected dynamixels if True.
+165 | |          If False, change only servo with self.config.id
+166 | |         @return:
+167 | |         """
+    | |___________^ D401
+168 |           if use_broadcast_id:
+169 |               current_id = 254
+    |
+
+examples/aloha/benchmark/python/dynamixel.py:161:9: D415 First line should end with a period, question mark, or exclamation point
+    |
+160 |       def set_id(self, old_id, new_id, use_broadcast_id: bool = False):
+161 | /         """Sets the id of the dynamixel servo
+162 | |         @param old_id: current id of the servo
+163 | |         @param new_id: new id
+164 | |         @param use_broadcast_id: set ids of all connected dynamixels if True.
+165 | |          If False, change only servo with self.config.id
+166 | |         @return:
+167 | |         """
+    | |___________^ D415
+168 |           if use_broadcast_id:
+169 |               current_id = 254
+    |
+    = help: Add closing punctuation
+
+examples/aloha/benchmark/python/dynamixel.py:203:9: D102 Missing docstring in public method
+    |
+201 |             )
+202 |
+203 |     def set_operating_mode(self, motor_id: int, operating_mode: OperatingMode):
+    |         ^^^^^^^^^^^^^^^^^^ D102
+204 |         dxl_comm_result, dxl_error = self.packetHandler.write2ByteTxRx(
+205 |             self.portHandler, motor_id, self.OPERATING_MODE_ADDR, operating_mode.value,
+    |
+
+examples/aloha/benchmark/python/dynamixel.py:210:9: D102 Missing docstring in public method
+    |
+208 |         self.operating_modes[motor_id] = operating_mode
+209 |
+210 |     def set_pwm_limit(self, motor_id: int, limit: int):
+    |         ^^^^^^^^^^^^^ D102
+211 |         dxl_comm_result, dxl_error = self.packetHandler.write2ByteTxRx(
+212 |             self.portHandler, motor_id, 36, limit,
+    |
+
+examples/aloha/benchmark/python/dynamixel.py:216:9: D102 Missing docstring in public method
+    |
+214 |         self._process_response(dxl_comm_result, dxl_error, motor_id)
+215 |
+216 |     def set_velocity_limit(self, motor_id: int, velocity_limit):
+    |         ^^^^^^^^^^^^^^^^^^ D102
+217 |         dxl_comm_result, dxl_error = self.packetHandler.write4ByteTxRx(
+218 |             self.portHandler, motor_id, self.ADDR_VELOCITY_LIMIT, velocity_limit,
+    |
+
+examples/aloha/benchmark/python/dynamixel.py:222:9: D102 Missing docstring in public method
+    |
+220 |         self._process_response(dxl_comm_result, dxl_error, motor_id)
+221 |
+222 |     def set_P(self, motor_id: int, P: int):
+    |         ^^^^^ D102
+223 |         dxl_comm_result, dxl_error = self.packetHandler.write2ByteTxRx(
+224 |             self.portHandler, motor_id, self.POSITION_P, P,
+    |
+
+examples/aloha/benchmark/python/dynamixel.py:228:9: D102 Missing docstring in public method
+    |
+226 |         self._process_response(dxl_comm_result, dxl_error, motor_id)
+227 |
+228 |     def set_I(self, motor_id: int, I: int):
+    |         ^^^^^ D102
+229 |         dxl_comm_result, dxl_error = self.packetHandler.write2ByteTxRx(
+230 |             self.portHandler, motor_id, self.POSITION_I, I,
+    |
+
+examples/aloha/benchmark/python/dynamixel.py:234:9: D102 Missing docstring in public method
+    |
+232 |         self._process_response(dxl_comm_result, dxl_error, motor_id)
+233 |
+234 |     def read_home_offset(self, motor_id: int):
+    |         ^^^^^^^^^^^^^^^^ D102
+235 |         self._disable_torque(motor_id)
+236 |         # dxl_comm_result, dxl_error = self.packetHandler.write4ByteTxRx(self.portHandler, motor_id,
+    |
+
+examples/aloha/benchmark/python/dynamixel.py:243:9: D102 Missing docstring in public method
+    |
+241 |         return home_offset
+242 |
+243 |     def set_home_offset(self, motor_id: int, home_position: int):
+    |         ^^^^^^^^^^^^^^^ D102
+244 |         self._disable_torque(motor_id)
+245 |         dxl_comm_result, dxl_error = self.packetHandler.write4ByteTxRx(
+    |
+
+examples/aloha/benchmark/python/dynamixel.py:251:9: D102 Missing docstring in public method
+    |
+249 |         self._enable_torque(motor_id)
+250 |
+251 |     def set_baudrate(self, motor_id: int, baudrate):
+    |         ^^^^^^^^^^^^ D102
+252 |         # translate baudrate into dynamixel baudrate setting id
+253 |         if baudrate == 57600:
+    |
+
+examples/aloha/benchmark/python/dynamixel.py:312:9: D102 Missing docstring in public method
+    |
+310 |         return value
+311 |
+312 |     def set_home_position(self, motor_id: int):
+    |         ^^^^^^^^^^^^^^^^^ D102
+313 |         print(f"setting home position for motor {motor_id}")
+314 |         self.set_home_offset(motor_id, 0)
+    |
+
+examples/aloha/benchmark/python/robot.py:1:1: D100 Missing docstring in public module
+examples/aloha/benchmark/python/robot.py:17:7: D101 Missing docstring in public class
+   |
+17 | class MotorControlType(Enum):
+   |       ^^^^^^^^^^^^^^^^ D101
+18 |     PWM = auto()
+19 |     POSITION_CONTROL = auto()
+   |
+
+examples/aloha/benchmark/python/robot.py:24:7: D101 Missing docstring in public class
+   |
+24 | class Robot:
+   |       ^^^^^ D101
+25 |     # def __init__(self, device_name: str, baudrate=1_000_000, servo_ids=[1, 2, 3, 4, 5]):
+26 |     def __init__(self, dynamixel, baudrate=1_000_000, servo_ids=[1, 2, 3, 4, 5]):
+   |
+
+examples/aloha/benchmark/python/robot.py:26:9: D107 Missing docstring in `__init__`
+   |
+24 | class Robot:
+25 |     # def __init__(self, device_name: str, baudrate=1_000_000, servo_ids=[1, 2, 3, 4, 5]):
+26 |     def __init__(self, dynamixel, baudrate=1_000_000, servo_ids=[1, 2, 3, 4, 5]):
+   |         ^^^^^^^^ D107
+27 |         self.servo_ids = servo_ids
+28 |         self.dynamixel = dynamixel
+   |
+
+examples/aloha/benchmark/python/robot.py:69:9: D205 1 blank line required between summary line and description
+   |
+68 |       def read_position(self, tries=2):
+69 | /         """Reads the joint positions of the robot. 2048 is the center position. 0 and 4096 are 180 degrees in each direction.
+70 | |         :param tries: maximum number of tries to read the position
+71 | |         :return: list of joint positions in range [0, 4096]
+72 | |         """
+   | |___________^ D205
+73 |           result = self.position_reader.txRxPacket()
+74 |           if result != 0:
+   |
+   = help: Insert single blank line
+
+examples/aloha/benchmark/python/robot.py:69:9: D400 First line should end with a period
+   |
+68 |       def read_position(self, tries=2):
+69 | /         """Reads the joint positions of the robot. 2048 is the center position. 0 and 4096 are 180 degrees in each direction.
+70 | |         :param tries: maximum number of tries to read the position
+71 | |         :return: list of joint positions in range [0, 4096]
+72 | |         """
+   | |___________^ D400
+73 |           result = self.position_reader.txRxPacket()
+74 |           if result != 0:
+   |
+   = help: Add period
+
+examples/aloha/benchmark/python/robot.py:69:9: D401 First line of docstring should be in imperative mood: "Reads the joint positions of the robot. 2048 is the center position. 0 and 4096 are 180 degrees in each direction."
+   |
+68 |       def read_position(self, tries=2):
+69 | /         """Reads the joint positions of the robot. 2048 is the center position. 0 and 4096 are 180 degrees in each direction.
+70 | |         :param tries: maximum number of tries to read the position
+71 | |         :return: list of joint positions in range [0, 4096]
+72 | |         """
+   | |___________^ D401
+73 |           result = self.position_reader.txRxPacket()
+74 |           if result != 0:
+   |
+
+examples/aloha/benchmark/python/robot.py:69:9: D415 First line should end with a period, question mark, or exclamation point
+   |
+68 |       def read_position(self, tries=2):
+69 | /         """Reads the joint positions of the robot. 2048 is the center position. 0 and 4096 are 180 degrees in each direction.
+70 | |         :param tries: maximum number of tries to read the position
+71 | |         :return: list of joint positions in range [0, 4096]
+72 | |         """
+   | |___________^ D415
+73 |           result = self.position_reader.txRxPacket()
+74 |           if result != 0:
+   |
+   = help: Add closing punctuation
+
+examples/aloha/benchmark/python/robot.py:87:9: D205 1 blank line required between summary line and description
+   |
+86 |       def read_velocity(self):
+87 | /         """Reads the joint velocities of the robot.
+88 | |         :return: list of joint velocities,
+89 | |         """
+   | |___________^ D205
+90 |           self.velocity_reader.txRxPacket()
+91 |           velocties = []
+   |
+   = help: Insert single blank line
+
+examples/aloha/benchmark/python/robot.py:87:9: D400 First line should end with a period
+   |
+86 |       def read_velocity(self):
+87 | /         """Reads the joint velocities of the robot.
+88 | |         :return: list of joint velocities,
+89 | |         """
+   | |___________^ D400
+90 |           self.velocity_reader.txRxPacket()
+91 |           velocties = []
+   |
+   = help: Add period
+
+examples/aloha/benchmark/python/robot.py:87:9: D401 First line of docstring should be in imperative mood: "Reads the joint velocities of the robot."
+   |
+86 |       def read_velocity(self):
+87 | /         """Reads the joint velocities of the robot.
+88 | |         :return: list of joint velocities,
+89 | |         """
+   | |___________^ D401
+90 |           self.velocity_reader.txRxPacket()
+91 |           velocties = []
+   |
+
+examples/aloha/benchmark/python/robot.py:87:9: D415 First line should end with a period, question mark, or exclamation point
+   |
+86 |       def read_velocity(self):
+87 | /         """Reads the joint velocities of the robot.
+88 | |         :return: list of joint velocities,
+89 | |         """
+   | |___________^ D415
+90 |           self.velocity_reader.txRxPacket()
+91 |           velocties = []
+   |
+   = help: Add closing punctuation
+
+examples/aloha/benchmark/python/robot.py:100:9: D200 One-line docstring should fit on one line
+    |
+ 99 |       def set_goal_pos(self, action):
+100 | /         """:param action: list or numpy array of target joint positions in range [0, 4096]
+101 | |         """
+    | |___________^ D200
+102 |           if self.motor_control_state is not MotorControlType.POSITION_CONTROL:
+103 |               self._set_position_control()
+    |
+    = help: Reformat to one line
+
+examples/aloha/benchmark/python/robot.py:116:9: D205 1 blank line required between summary line and description
+    |
+115 |       def set_pwm(self, action):
+116 | /         """Sets the pwm values for the servos.
+117 | |         :param action: list or numpy array of pwm values in range [0, 885]
+118 | |         """
+    | |___________^ D205
+119 |           if self.motor_control_state is not MotorControlType.PWM:
+120 |               self._set_pwm_control()
+    |
+    = help: Insert single blank line
+
+examples/aloha/benchmark/python/robot.py:116:9: D400 First line should end with a period
+    |
+115 |       def set_pwm(self, action):
+116 | /         """Sets the pwm values for the servos.
+117 | |         :param action: list or numpy array of pwm values in range [0, 885]
+118 | |         """
+    | |___________^ D400
+119 |           if self.motor_control_state is not MotorControlType.PWM:
+120 |               self._set_pwm_control()
+    |
+    = help: Add period
+
+examples/aloha/benchmark/python/robot.py:116:9: D401 First line of docstring should be in imperative mood: "Sets the pwm values for the servos."
+    |
+115 |       def set_pwm(self, action):
+116 | /         """Sets the pwm values for the servos.
+117 | |         :param action: list or numpy array of pwm values in range [0, 885]
+118 | |         """
+    | |___________^ D401
+119 |           if self.motor_control_state is not MotorControlType.PWM:
+120 |               self._set_pwm_control()
+    |
+
+examples/aloha/benchmark/python/robot.py:116:9: D415 First line should end with a period, question mark, or exclamation point
+    |
+115 |       def set_pwm(self, action):
+116 | /         """Sets the pwm values for the servos.
+117 | |         :param action: list or numpy array of pwm values in range [0, 885]
+118 | |         """
+    | |___________^ D415
+119 |           if self.motor_control_state is not MotorControlType.PWM:
+120 |               self._set_pwm_control()
+    |
+    = help: Add closing punctuation
+
+examples/aloha/benchmark/python/robot.py:131:9: D200 One-line docstring should fit on one line
+    |
+130 |       def set_trigger_torque(self):
+131 | /         """Sets a constant torque torque for the last servo in the chain. This is useful for the trigger of the leader arm
+132 | |         """
+    | |___________^ D200
+133 |           self.dynamixel._enable_torque(self.servo_ids[-1])
+134 |           self.dynamixel.set_pwm_value(self.servo_ids[-1], 200)
+    |
+    = help: Reformat to one line
+
+examples/aloha/benchmark/python/robot.py:131:9: D400 First line should end with a period
+    |
+130 |       def set_trigger_torque(self):
+131 | /         """Sets a constant torque torque for the last servo in the chain. This is useful for the trigger of the leader arm
+132 | |         """
+    | |___________^ D400
+133 |           self.dynamixel._enable_torque(self.servo_ids[-1])
+134 |           self.dynamixel.set_pwm_value(self.servo_ids[-1], 200)
+    |
+    = help: Add period
+
+examples/aloha/benchmark/python/robot.py:131:9: D401 First line of docstring should be in imperative mood: "Sets a constant torque torque for the last servo in the chain. This is useful for the trigger of the leader arm"
+    |
+130 |       def set_trigger_torque(self):
+131 | /         """Sets a constant torque torque for the last servo in the chain. This is useful for the trigger of the leader arm
+132 | |         """
+    | |___________^ D401
+133 |           self.dynamixel._enable_torque(self.servo_ids[-1])
+134 |           self.dynamixel.set_pwm_value(self.servo_ids[-1], 200)
+    |
+
+examples/aloha/benchmark/python/robot.py:131:9: D415 First line should end with a period, question mark, or exclamation point
+    |
+130 |       def set_trigger_torque(self):
+131 | /         """Sets a constant torque torque for the last servo in the chain. This is useful for the trigger of the leader arm
+132 | |         """
+    | |___________^ D415
+133 |           self.dynamixel._enable_torque(self.servo_ids[-1])
+134 |           self.dynamixel.set_pwm_value(self.servo_ids[-1], 200)
+    |
+    = help: Add closing punctuation
+
+examples/aloha/benchmark/python/robot.py:137:9: D205 1 blank line required between summary line and description
+    |
+136 |       def limit_pwm(self, limit: Union[int, list, np.ndarray]):
+137 | /         """Limits the pwm values for the servos in for position control
+138 | |         @param limit: 0 ~ 885
+139 | |         @return:
+140 | |         """
+    | |___________^ D205
+141 |           if isinstance(limit, int):
+142 |               limits = [
+    |
+    = help: Insert single blank line
+
+examples/aloha/benchmark/python/robot.py:137:9: D400 First line should end with a period
+    |
+136 |       def limit_pwm(self, limit: Union[int, list, np.ndarray]):
+137 | /         """Limits the pwm values for the servos in for position control
+138 | |         @param limit: 0 ~ 885
+139 | |         @return:
+140 | |         """
+    | |___________^ D400
+141 |           if isinstance(limit, int):
+142 |               limits = [
+    |
+    = help: Add period
+
+examples/aloha/benchmark/python/robot.py:137:9: D415 First line should end with a period, question mark, or exclamation point
+    |
+136 |       def limit_pwm(self, limit: Union[int, list, np.ndarray]):
+137 | /         """Limits the pwm values for the servos in for position control
+138 | |         @param limit: 0 ~ 885
+139 | |         @return:
+140 | |         """
+    | |___________^ D415
+141 |           if isinstance(limit, int):
+142 |               limits = [
+    |
+    = help: Add closing punctuation
+
+examples/aloha/benchmark/python/teleoperate_real_robot.py:1:1: D100 Missing docstring in public module
+examples/aloha/benchmark/ros2/teleop.py:1:1: D100 Missing docstring in public module
+examples/aloha/nodes/gym_dora_node.py:1:1: D100 Missing docstring in public module
+examples/aloha/nodes/gym_dora_node.py:14:7: D101 Missing docstring in public class
+   |
+14 | class ReplayPolicy:
+   |       ^^^^^^^^^^^^ D101
+15 |     def __init__(self, example_path, epidode=0):
+16 |         df_action = pd.read_parquet(example_path / "action.parquet")
+   |
+
+examples/aloha/nodes/gym_dora_node.py:15:9: D107 Missing docstring in `__init__`
+   |
+14 | class ReplayPolicy:
+15 |     def __init__(self, example_path, epidode=0):
+   |         ^^^^^^^^ D107
+16 |         df_action = pd.read_parquet(example_path / "action.parquet")
+17 |         df_episode_index = pd.read_parquet(example_path / "episode_index.parquet")
+   |
+
+examples/aloha/nodes/gym_dora_node.py:31:9: D102 Missing docstring in public method
+   |
+29 |         self.finished = False
+30 |
+31 |     def select_action(self, obs):
+   |         ^^^^^^^^^^^^^ D102
+32 |         if self.index < len(self.df):
+33 |             self.index += 1
+   |
+
+examples/aloha/nodes/keyboard_node.py:1:1: D100 Missing docstring in public module
+examples/aloha/nodes/lerobot_webcam_saver.py:1:1: D100 Missing docstring in public module
+examples/aloha/nodes/llm_op.py:1:1: D100 Missing docstring in public module
+examples/aloha/nodes/llm_op.py:41:5: D417 Missing argument description in the docstring for `extract_python_code_blocks`: `text`
+   |
+41 | def extract_python_code_blocks(text):
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^ D417
+42 |     """Extracts Python code blocks from the given text that are enclosed in triple backticks with a python language identifier.
+   |
+
+examples/aloha/nodes/llm_op.py:42:5: D401 First line of docstring should be in imperative mood: "Extracts Python code blocks from the given text that are enclosed in triple backticks with a python language identifier."
+   |
+41 |   def extract_python_code_blocks(text):
+42 | /     """Extracts Python code blocks from the given text that are enclosed in triple backticks with a python language identifier.
+43 | |
+44 | |     Parameters
+45 | |     ----------
+46 | |     - text: A string that may contain one or more Python code blocks.
+47 | |
+48 | |     Returns
+49 | |     -------
+50 | |     - A list of strings, where each string is a block of Python code extracted from the text.
+51 | |
+52 | |     """
+   | |_______^ D401
+53 |       pattern = r"```python\n(.*?)\n```"
+54 |       matches = re.findall(pattern, text, re.DOTALL)
+   |
+
+examples/aloha/nodes/llm_op.py:65:5: D417 Missing argument description in the docstring for `remove_last_line`: `python_code`
+   |
+65 | def remove_last_line(python_code):
+   |     ^^^^^^^^^^^^^^^^ D417
+66 |     """Removes the last line from a given string of Python code.
+   |
+
+examples/aloha/nodes/llm_op.py:66:5: D401 First line of docstring should be in imperative mood: "Removes the last line from a given string of Python code."
+   |
+65 |   def remove_last_line(python_code):
+66 | /     """Removes the last line from a given string of Python code.
+67 | |
+68 | |     Parameters
+69 | |     ----------
+70 | |     - python_code: A string representing Python source code.
+71 | |
+72 | |     Returns
+73 | |     -------
+74 | |     - A string with the last line removed.
+75 | |
+76 | |     """
+   | |_______^ D401
+77 |       lines = python_code.split("\n")  # Split the string into lines
+78 |       if lines:  # Check if there are any lines to remove
+   |
+
+examples/aloha/nodes/llm_op.py:84:5: D205 1 blank line required between summary line and description
+   |
+83 |   def calculate_similarity(source, target):
+84 | /     """Calculate a similarity score between the source and target strings.
+85 | |     This uses the edit distance relative to the length of the strings.
+86 | |     """
+   | |_______^ D205
+87 |       edit_distance = pylcs.edit_distance(source, target)
+88 |       max_length = max(len(source), len(target))
+   |
+   = help: Insert single blank line
+
+examples/aloha/nodes/llm_op.py:95:5: D205 1 blank line required between summary line and description
+   |
+94 |   def find_best_match_location(source_code, target_block):
+95 | /     """Find the best match for the target_block within the source_code by searching line by line,
+96 | |     considering blocks of varying lengths.
+97 | |     """
+   | |_______^ D205
+98 |       source_lines = source_code.split("\n")
+99 |       target_lines = target_block.split("\n")
+   |
+   = help: Insert single blank line
+
+examples/aloha/nodes/llm_op.py:125:5: D200 One-line docstring should fit on one line
+    |
+124 |   def replace_code_in_source(source_code, replacement_block: str):
+125 | /     """Replace the best matching block in the source_code with the replacement_block, considering variable block lengths.
+126 | |     """
+    | |_______^ D200
+127 |       replacement_block = extract_python_code_blocks(replacement_block)[0]
+128 |       start_index, end_index = find_best_match_location(source_code, replacement_block)
+    |
+    = help: Reformat to one line
+
+examples/aloha/nodes/llm_op.py:138:7: D101 Missing docstring in public class
+    |
+138 | class Operator:
+    |       ^^^^^^^^ D101
+139 |     def __init__(self) -> None:
+140 |         self.policy_init = False
+    |
+
+examples/aloha/nodes/llm_op.py:139:9: D107 Missing docstring in `__init__`
+    |
+138 | class Operator:
+139 |     def __init__(self) -> None:
+    |         ^^^^^^^^ D107
+140 |         self.policy_init = False
+    |
+
+examples/aloha/nodes/llm_op.py:142:9: D102 Missing docstring in public method
+    |
+140 |         self.policy_init = False
+141 |
+142 |     def on_event(
+    |         ^^^^^^^^ D102
+143 |         self,
+144 |         dora_event,
+    |
+
+examples/aloha/nodes/llm_op.py:179:9: D102 Missing docstring in public method
+    |
+177 |         return DoraStatus.CONTINUE
+178 |
+179 |     def ask_llm(self, prompt):
+    |         ^^^^^^^ D102
+180 |
+181 |         # Generate output
+    |
+
+examples/aloha/nodes/plot_node.py:1:1: D100 Missing docstring in public module
+examples/aloha/nodes/policy.py:1:1: D100 Missing docstring in public module
+examples/aloha/nodes/policy.py:4:7: D101 Missing docstring in public class
+  |
+4 | class Operator:
+  |       ^^^^^^^^ D101
+5 |     def __init__(self):
+6 |         self.actions = ["get_food", "get_hat"]
+  |
+
+examples/aloha/nodes/policy.py:5:9: D107 Missing docstring in `__init__`
+  |
+4 | class Operator:
+5 |     def __init__(self):
+  |         ^^^^^^^^ D107
+6 |         self.actions = ["get_food", "get_hat"]
+  |
+
+examples/aloha/nodes/policy.py:8:9: D102 Missing docstring in public method
+   |
+ 6 |         self.actions = ["get_food", "get_hat"]
+ 7 |
+ 8 |     def on_event(self, event: dict, send_output) -> DoraStatus:
+   |         ^^^^^^^^ D102
+ 9 |         if event["type"] == "INPUT":
+10 |             id = event["id"]
+   |
+
+examples/aloha/nodes/realsense_node.py:1:1: D100 Missing docstring in public module
+examples/aloha/nodes/replay.py:1:1: D100 Missing docstring in public module
+examples/aloha/nodes/webcam.py:1:1: D100 Missing docstring in public module
+examples/aloha/nodes/whisper_node.py:1:1: D100 Missing docstring in public module
+examples/aloha/nodes/whisper_node.py:16:5: D103 Missing docstring in public function
+   |
+16 | def get_text(duration) -> str:
+   |     ^^^^^^^^ D103
+17 |
+18 |     ## Microphone
+   |
+
+examples/aloha/tests/test_realsense.py:1:1: D100 Missing docstring in public module
+examples/lebai/nodes/interpolation.py:1:1: D100 Missing docstring in public module
+examples/lebai/nodes/interpolation.py:10:5: D200 One-line docstring should fit on one line
+   |
+ 9 |   class Action(Enum):
+10 | /     """Action abstraction
+11 | |     """
+   | |_______^ D200
+12 |
+13 |       YAW_RIGHT = ("yaw right", "movej", [0, 0, 0, 0, -0.1, 0, 0.1])
+   |
+   = help: Reformat to one line
+
+examples/lebai/nodes/interpolation.py:10:5: D400 First line should end with a period
+   |
+ 9 |   class Action(Enum):
+10 | /     """Action abstraction
+11 | |     """
+   | |_______^ D400
+12 |
+13 |       YAW_RIGHT = ("yaw right", "movej", [0, 0, 0, 0, -0.1, 0, 0.1])
+   |
+   = help: Add period
+
+examples/lebai/nodes/interpolation.py:10:5: D415 First line should end with a period, question mark, or exclamation point
+   |
+ 9 |   class Action(Enum):
+10 | /     """Action abstraction
+11 | |     """
+   | |_______^ D415
+12 |
+13 |       YAW_RIGHT = ("yaw right", "movej", [0, 0, 0, 0, -0.1, 0, 0.1])
+   |
+   = help: Add closing punctuation
+
+examples/lebai/nodes/key_interpolation.py:1:1: D100 Missing docstring in public module
+examples/lebai/nodes/prompt_interpolation.py:1:1: D100 Missing docstring in public module
+examples/lebai/nodes/vlm_prompt.py:1:1: D100 Missing docstring in public module
+examples/lebai/nodes/voice_interpolation.py:1:1: D100 Missing docstring in public module
+examples/reachy/nodes/gym_dora_node.py:1:1: D100 Missing docstring in public module
+examples/reachy/nodes/gym_dora_node.py:14:7: D101 Missing docstring in public class
+   |
+14 | class ReplayPolicy:
+   |       ^^^^^^^^^^^^ D101
+15 |     def __init__(self, example_path, epidode=0):
+16 |         df_action = pd.read_parquet(example_path / "action.parquet")
+   |
+
+examples/reachy/nodes/gym_dora_node.py:15:9: D107 Missing docstring in `__init__`
+   |
+14 | class ReplayPolicy:
+15 |     def __init__(self, example_path, epidode=0):
+   |         ^^^^^^^^ D107
+16 |         df_action = pd.read_parquet(example_path / "action.parquet")
+17 |         df_episode_index = pd.read_parquet(example_path / "episode_index.parquet")
+   |
+
+examples/reachy/nodes/gym_dora_node.py:31:9: D102 Missing docstring in public method
+   |
+29 |         self.finished = False
+30 |
+31 |     def select_action(self, obs):
+   |         ^^^^^^^^^^^^^ D102
+32 |         if self.index < len(self.df):
+33 |             self.index += 1
+   |
+
+examples/reachy/nodes/gym_dora_node.py:44:7: D101 Missing docstring in public class
+   |
+44 | class ReplayLeRobotPolicy:
+   |       ^^^^^^^^^^^^^^^^^^^ D101
+45 |     def __init__(self, episode=21):
+46 |         self.index = 0
+   |
+
+examples/reachy/nodes/gym_dora_node.py:45:9: D107 Missing docstring in `__init__`
+   |
+44 | class ReplayLeRobotPolicy:
+45 |     def __init__(self, episode=21):
+   |         ^^^^^^^^ D107
+46 |         self.index = 0
+47 |         self.finished = False
+   |
+
+examples/reachy/nodes/gym_dora_node.py:55:9: D102 Missing docstring in public method
+   |
+53 |         self.actions = dataset.hf_dataset["action"][from_index:to_index]
+54 |
+55 |     def select_action(self, obs):
+   |         ^^^^^^^^^^^^^ D102
+56 |         if self.index < len(self.actions):
+57 |             self.index += 1
+   |
+
+examples/reachy/nodes/keyboard_node.py:1:1: D100 Missing docstring in public module
+examples/reachy/nodes/lerobot_webcam_saver.py:1:1: D100 Missing docstring in public module
+examples/reachy/nodes/plot_node.py:1:1: D100 Missing docstring in public module
+examples/reachy/nodes/reachy_client.py:1:1: D100 Missing docstring in public module
+examples/reachy/nodes/reachy_vision_client.py:1:1: D100 Missing docstring in public module
+examples/reachy/nodes/replay_node.py:1:1: D100 Missing docstring in public module
+examples/reachy1/nodes/gym_dora_node.py:1:1: D100 Missing docstring in public module
+examples/reachy1/nodes/gym_dora_node.py:14:7: D101 Missing docstring in public class
+   |
+14 | class ReplayPolicy:
+   |       ^^^^^^^^^^^^ D101
+15 |     def __init__(self, example_path, epidode=0):
+16 |         df_action = pd.read_parquet(example_path / "action.parquet")
+   |
+
+examples/reachy1/nodes/gym_dora_node.py:15:9: D107 Missing docstring in `__init__`
+   |
+14 | class ReplayPolicy:
+15 |     def __init__(self, example_path, epidode=0):
+   |         ^^^^^^^^ D107
+16 |         df_action = pd.read_parquet(example_path / "action.parquet")
+17 |         df_episode_index = pd.read_parquet(example_path / "episode_index.parquet")
+   |
+
+examples/reachy1/nodes/gym_dora_node.py:31:9: D102 Missing docstring in public method
+   |
+29 |         self.finished = False
+30 |
+31 |     def select_action(self, obs):
+   |         ^^^^^^^^^^^^^ D102
+32 |         if self.index < len(self.df):
+33 |             self.index += 1
+   |
+
+examples/reachy1/nodes/gym_dora_node.py:44:7: D101 Missing docstring in public class
+   |
+44 | class ReplayLeRobotPolicy:
+   |       ^^^^^^^^^^^^^^^^^^^ D101
+45 |     def __init__(self, episode=21):
+46 |         self.index = 0
+   |
+
+examples/reachy1/nodes/gym_dora_node.py:45:9: D107 Missing docstring in `__init__`
+   |
+44 | class ReplayLeRobotPolicy:
+45 |     def __init__(self, episode=21):
+   |         ^^^^^^^^ D107
+46 |         self.index = 0
+47 |         self.finished = False
+   |
+
+examples/reachy1/nodes/gym_dora_node.py:55:9: D102 Missing docstring in public method
+   |
+53 |         self.actions = dataset.hf_dataset["action"][from_index:to_index]
+54 |
+55 |     def select_action(self, obs):
+   |         ^^^^^^^^^^^^^ D102
+56 |         if self.index < len(self.actions):
+57 |             self.index += 1
+   |
+
+examples/reachy1/nodes/key_interpolation.py:1:1: D100 Missing docstring in public module
+examples/reachy1/nodes/keyboard_node.py:1:1: D100 Missing docstring in public module
+examples/reachy1/nodes/lerobot_webcam_saver.py:1:1: D100 Missing docstring in public module
+examples/reachy1/nodes/plot_node.py:1:1: D100 Missing docstring in public module
+examples/reachy1/nodes/reachy_client.py:1:1: D100 Missing docstring in public module
+examples/reachy1/nodes/reachy_vision_client.py:1:1: D100 Missing docstring in public module
+examples/reachy1/nodes/replay_node.py:1:1: D100 Missing docstring in public module
+examples/reachy1/nodes/text_interpolation.py:1:1: D100 Missing docstring in public module
+examples/so100/bus.py:1:1: D100 Missing docstring in public module
+examples/so100/bus.py:22:5: D103 Missing docstring in public function
+   |
+22 | def wrap_joints_and_values(
+   |     ^^^^^^^^^^^^^^^^^^^^^^ D103
+23 |     joints: Union[list[str], pa.Array],
+24 |     values: Union[list[int], pa.Array],
+   |
+
+examples/so100/bus.py:32:7: D101 Missing docstring in public class
+   |
+32 | class TorqueMode(enum.Enum):
+   |       ^^^^^^^^^^ D101
+33 |     ENABLED = pa.scalar(1, pa.uint32())
+34 |     DISABLED = pa.scalar(0, pa.uint32())
+   |
+
+examples/so100/bus.py:37:7: D101 Missing docstring in public class
+   |
+37 | class OperatingMode(enum.Enum):
+   |       ^^^^^^^^^^^^^ D101
+38 |     ONE_TURN = pa.scalar(0, pa.uint32())
+   |
+
+examples/so100/bus.py:94:7: D101 Missing docstring in public class
+   |
+94 | class FeetechBus:
+   |       ^^^^^^^^^^ D101
+95 |
+96 |     def __init__(self, port: str, description: dict[str, (np.uint8, str)]):
+   |
+
+examples/so100/bus.py:97:9: D205 1 blank line required between summary line and description
+    |
+ 96 |       def __init__(self, port: str, description: dict[str, (np.uint8, str)]):
+ 97 | /         """Args:
+ 98 | |         port: the serial port to connect to the Feetech bus
+ 99 | |         description: a dictionary containing the description of the motors connected to the bus. The keys are the
+100 | |         motor names and the values are tuples containing the motor id and the motor model.
+101 | |
+102 | |         """
+    | |___________^ D205
+103 |           self.port = port
+104 |           self.descriptions = description
+    |
+    = help: Insert single blank line
+
+examples/so100/bus.py:132:9: D102 Missing docstring in public method
+    |
+130 |         self.group_writers = {}
+131 |
+132 |     def close(self):
+    |         ^^^^^ D102
+133 |         self.port_handler.closePort()
+    |
+
+examples/so100/bus.py:135:9: D102 Missing docstring in public method
+    |
+133 |         self.port_handler.closePort()
+134 |
+135 |     def write(self, data_name: str, data: pa.StructArray):
+    |         ^^^^^ D102
+136 |         motor_ids = [
+137 |             self.motor_ctrl[motor_name.as_py()]["id"]
+    |
+
+examples/so100/bus.py:201:9: D102 Missing docstring in public method
+    |
+199 |             )
+200 |
+201 |     def read(self, data_name: str, motor_names: pa.Array) -> pa.StructArray:
+    |         ^^^^ D102
+202 |         motor_ids = [
+203 |             self.motor_ctrl[motor_name.as_py()]["id"] for motor_name in motor_names
+    |
+
+examples/so100/bus.py:251:9: D102 Missing docstring in public method
+    |
+249 |         return wrap_joints_and_values(motor_names, values)
+250 |
+251 |     def write_torque_enable(self, torque_mode: pa.StructArray):
+    |         ^^^^^^^^^^^^^^^^^^^ D102
+252 |         self.write("Torque_Enable", torque_mode)
+    |
+
+examples/so100/bus.py:254:9: D102 Missing docstring in public method
+    |
+252 |         self.write("Torque_Enable", torque_mode)
+253 |
+254 |     def write_operating_mode(self, operating_mode: pa.StructArray):
+    |         ^^^^^^^^^^^^^^^^^^^^ D102
+255 |         self.write("Mode", operating_mode)
+    |
+
+examples/so100/bus.py:257:9: D102 Missing docstring in public method
+    |
+255 |         self.write("Mode", operating_mode)
+256 |
+257 |     def read_position(self, motor_names: pa.Array) -> pa.StructArray:
+    |         ^^^^^^^^^^^^^ D102
+258 |         return self.read("Present_Position", motor_names)
+    |
+
+examples/so100/bus.py:260:9: D102 Missing docstring in public method
+    |
+258 |         return self.read("Present_Position", motor_names)
+259 |
+260 |     def read_velocity(self, motor_names: pa.Array) -> pa.StructArray:
+    |         ^^^^^^^^^^^^^ D102
+261 |         return self.read("Present_Velocity", motor_names)
+    |
+
+examples/so100/bus.py:263:9: D102 Missing docstring in public method
+    |
+261 |         return self.read("Present_Velocity", motor_names)
+262 |
+263 |     def read_current(self, motor_names: pa.Array) -> pa.StructArray:
+    |         ^^^^^^^^^^^^ D102
+264 |         return self.read("Present_Current", motor_names)
+    |
+
+examples/so100/bus.py:266:9: D102 Missing docstring in public method
+    |
+264 |         return self.read("Present_Current", motor_names)
+265 |
+266 |     def write_goal_position(self, goal_position: pa.StructArray):
+    |         ^^^^^^^^^^^^^^^^^^^ D102
+267 |         self.write("Goal_Position", goal_position)
+    |
+
+examples/so100/bus.py:269:9: D102 Missing docstring in public method
+    |
+267 |         self.write("Goal_Position", goal_position)
+268 |
+269 |     def write_max_angle_limit(self, max_angle_limit: pa.StructArray):
+    |         ^^^^^^^^^^^^^^^^^^^^^ D102
+270 |         self.write("Max_Angle_Limit", max_angle_limit)
+    |
+
+examples/so100/bus.py:272:9: D102 Missing docstring in public method
+    |
+270 |         self.write("Max_Angle_Limit", max_angle_limit)
+271 |
+272 |     def write_min_angle_limit(self, min_angle_limit: pa.StructArray):
+    |         ^^^^^^^^^^^^^^^^^^^^^ D102
+273 |         self.write("Min_Angle_Limit", min_angle_limit)
+    |
+
+examples/so100/configure.py:48:5: D103 Missing docstring in public function
+   |
+48 | def pause():
+   |     ^^^^^ D103
+49 |     input("Press Enter to continue...")
+   |
+
+examples/so100/configure.py:52:5: D103 Missing docstring in public function
+   |
+52 | def configure_servos(bus: FeetechBus):
+   |     ^^^^^^^^^^^^^^^^ D103
+53 |     bus.write_torque_enable(
+54 |         wrap_joints_and_values(FULL_ARM, [TorqueMode.DISABLED.value] * 6),
+   |
+
+examples/so100/configure.py:70:5: D103 Missing docstring in public function
+   |
+70 | def main():
+   |     ^^^^ D103
+71 |     parser = argparse.ArgumentParser(
+72 |         description="SO100 Auto Configure: This program is used to automatically configure the Low Cost Robot (SO100) "
+   |
+
+examples/so100/nodes/interpolate_lcr_to_so100.py:1:1: D100 Missing docstring in public module
+examples/so100/nodes/interpolate_lcr_to_so100.py:16:5: D103 Missing docstring in public function
+   |
+16 | def main():
+   |     ^^^^ D103
+17 |     # Handle dynamic nodes, ask for the name of the node in the dataflow
+18 |     parser = argparse.ArgumentParser(
+   |
+
+examples/so100/nodes/interpolate_lcr_x_so100_to_record.py:1:1: D100 Missing docstring in public module
+examples/so100/nodes/interpolate_lcr_x_so100_to_record.py:15:5: D103 Missing docstring in public function
+   |
+15 | def main():
+   |     ^^^^ D103
+16 |     parser = argparse.ArgumentParser(
+17 |         description="Interpolation LCR Node: This Dora node is used to calculates appropriate goal positions for the "
+   |
+
+examples/so100/nodes/interpolate_replay_to_so100.py:1:1: D100 Missing docstring in public module
+examples/so100/nodes/interpolate_replay_to_so100.py:10:5: D103 Missing docstring in public function
+   |
+10 | def main():
+   |     ^^^^ D103
+11 |     # Handle dynamic nodes, ask for the name of the node in the dataflow
+12 |     parser = argparse.ArgumentParser(
+   |
+
+Found 181 errors.
+No fixes available (14 hidden fixes can be enabled with the `--unsafe-fixes` option).

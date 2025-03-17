@@ -1,17 +1,24 @@
+"""Module for handling Dynamixel bus communication and joint control.
+
+This module provides functionality for communicating with Dynamixel servos,
+including reading and writing joint positions, velocities, and other parameters.
+"""
+
 import enum
-
-import pyarrow as pa
-
 from typing import Union
 
+import pyarrow as pa
 from dynamixel_sdk import (
-    PacketHandler,
-    PortHandler,
     COMM_SUCCESS,
+    DXL_HIBYTE,
+    DXL_HIWORD,
+    DXL_LOBYTE,
+    DXL_LOWORD,
     GroupSyncRead,
     GroupSyncWrite,
+    PacketHandler,
+    PortHandler,
 )
-from dynamixel_sdk import DXL_HIBYTE, DXL_HIWORD, DXL_LOBYTE, DXL_LOWORD
 
 PROTOCOL_VERSION = 2.0
 BAUD_RATE = 1_000_000
@@ -22,38 +29,36 @@ def wrap_joints_and_values(
     joints: Union[list[str], pa.Array],
     values: Union[int, list[int], pa.Array],
 ) -> pa.StructArray:
-    """
-    Wraps joints and their corresponding values into a structured array.
+    """Wrap joints and their corresponding values into a structured array.
 
-    :param joints: A list, numpy array, or pyarrow array of joint names.
-    :type joints: Union[list[str], np.array, pa.Array]
-    :param values: A single integer value, or a list, numpy array, or pyarrow array of integer values.
-                   If a single integer is provided, it will be broadcasted to all joints.
-    :type values: Union[int, list[int], np.array, pa.Array]
+    Args:
+        joints: A list, numpy array, or pyarrow array of joint names.
+        values: A single integer value, or a list, numpy array, or pyarrow array of integer values.
+               If a single integer is provided, it will be broadcasted to all joints.
 
-    :return: A structured array with two fields:
-             - "joints": A string field containing the names of the joints.
-             - "values": An Int32Array containing the values corresponding to the joints.
-    :rtype: pa.StructArray
+    Returns:
+        A structured array with two fields:
+        - "joints": A string field containing the names of the joints.
+        - "values": An Int32Array containing the values corresponding to the joints.
 
-    :raises ValueError: If lengths of joints and values do not match.
+    Raises:
+        ValueError: If lengths of joints and values do not match.
 
     Example:
-    --------
-    joints = ["shoulder_pan", "shoulder_lift", "elbow_flex"]
-    values = [100, 200, 300]
-    struct_array = wrap_joints_and_values(joints, values)
+        joints = ["shoulder_pan", "shoulder_lift", "elbow_flex"]
+        values = [100, 200, 300]
+        struct_array = wrap_joints_and_values(joints, values)
 
-    This example wraps the given joints and their corresponding values into a structured array.
+        This example wraps the given joints and their corresponding values into a structured array.
 
-    Another example with a single integer value:
-    joints = ["shoulder_pan", "shoulder_lift", "elbow_flex"]
-    value = 150
-    struct_array = wrap_joints_and_values(joints, value)
+        Another example with a single integer value:
+        joints = ["shoulder_pan", "shoulder_lift", "elbow_flex"]
+        value = 150
+        struct_array = wrap_joints_and_values(joints, value)
 
-    This example broadcasts the single integer value to all joints and wraps them into a structured array.
+        This example broadcasts the single integer value to all joints and wraps them into a structured array.
+
     """
-
     if isinstance(values, int):
         values = [values] * len(joints)
 
@@ -69,16 +74,20 @@ def wrap_joints_and_values(
         mask = values.is_null()
 
     return pa.StructArray.from_arrays(
-        arrays=[joints, values], names=["joints", "values"], mask=mask
+        arrays=[joints, values], names=["joints", "values"], mask=mask,
     ).drop_null()
 
 
 class TorqueMode(enum.Enum):
+    """Enumeration for torque control modes of Dynamixel servos."""
+
     ENABLED = pa.scalar(1, pa.uint32())
     DISABLED = pa.scalar(0, pa.uint32())
 
 
 class OperatingMode(enum.Enum):
+    """Enumeration for operating modes of Dynamixel servos."""
+
     VELOCITY = pa.scalar(1, pa.uint32())
     POSITION = pa.scalar(3, pa.uint32())
     EXTENDED_POSITION = pa.scalar(4, pa.uint32())
@@ -152,8 +161,22 @@ MODEL_CONTROL_TABLE = {
 
 
 class DynamixelBus:
+    """A class for managing communication with Dynamixel servos.
+
+    This class provides methods for reading and writing data to Dynamixel servos,
+    including joint positions, velocities, and control parameters.
+    """
 
     def __init__(self, port: str, description: dict[str, (int, str)]):
+        """Initialize the DynamixelBus.
+
+        Args:
+            port: The serial port to connect to the Dynamixel bus.
+            description: A dictionary containing the description of the motors connected to the bus.
+                        The keys are motor names and the values are tuples containing the motor ID
+                        and the motor model.
+
+        """
         self.port = port
         self.descriptions = description
         self.motor_ctrl = {}
@@ -184,9 +207,17 @@ class DynamixelBus:
         self.group_writers = {}
 
     def close(self):
+        """Close the connection to the Dynamixel bus."""
         self.port_handler.closePort()
 
     def write(self, data_name: str, data: pa.StructArray):
+        """Write data to the Dynamixel servos.
+
+        Args:
+            data_name: The name of the data to write (e.g., "Goal_Position").
+            data: A structured array containing the data to write.
+
+        """
         motor_ids = [
             self.motor_ctrl[motor_name.as_py()]["id"]
             for motor_name in data.field("joints")
@@ -239,7 +270,7 @@ class DynamixelBus:
             else:
                 raise NotImplementedError(
                     f"Value of the number of bytes to be sent is expected to be in [1, 2, 4], but {packet_bytes_size} "
-                    f"is provided instead."
+                    f"is provided instead.",
                 )
 
             if init_group:
@@ -251,10 +282,20 @@ class DynamixelBus:
         if comm != COMM_SUCCESS:
             raise ConnectionError(
                 f"Write failed due to communication error on port {self.port} for group_key {group_key}: "
-                f"{self.packet_handler.getTxRxResult(comm)}"
+                f"{self.packet_handler.getTxRxResult(comm)}",
             )
 
     def read(self, data_name: str, motor_names: pa.Array) -> pa.StructArray:
+        """Read data from the Dynamixel servos.
+
+        Args:
+            data_name: The name of the data to read (e.g., "Present_Position").
+            motor_names: An array of motor names to read data from.
+
+        Returns:
+            A structured array containing the read data.
+
+        """
         motor_ids = [
             self.motor_ctrl[motor_name.as_py()]["id"] for motor_name in motor_names
         ]
@@ -281,13 +322,13 @@ class DynamixelBus:
         if comm != COMM_SUCCESS:
             raise ConnectionError(
                 f"Read failed due to communication error on port {self.port} for group_key {group_key}: "
-                f"{self.packet_handler.getTxRxResult(comm)}"
+                f"{self.packet_handler.getTxRxResult(comm)}",
             )
 
         values = pa.array(
             [
                 self.group_readers[group_key].getData(
-                    idx, packet_address, packet_bytes_size
+                    idx, packet_address, packet_bytes_size,
                 )
                 for idx in motor_ids
             ],
@@ -298,31 +339,100 @@ class DynamixelBus:
         return wrap_joints_and_values(motor_names, values)
 
     def write_torque_enable(self, torque_mode: pa.StructArray):
+        """Enable or disable torque for the servos.
+
+        Args:
+            torque_mode: A structured array containing the torque mode for each servo.
+
+        """
         self.write("Torque_Enable", torque_mode)
 
     def write_operating_mode(self, operating_mode: pa.StructArray):
+        """Set the operating mode for the servos.
+
+        Args:
+            operating_mode: A structured array containing the operating mode for each servo.
+
+        """
         self.write("Operating_Mode", operating_mode)
 
     def read_position(self, motor_names: pa.Array) -> pa.StructArray:
+        """Read the current position of the servos.
+
+        Args:
+            motor_names: An array of motor names to read positions from.
+
+        Returns:
+            A structured array containing the current positions.
+
+        """
         return self.read("Present_Position", motor_names)
 
     def read_velocity(self, motor_names: pa.Array) -> pa.StructArray:
+        """Read the current velocity of the servos.
+
+        Args:
+            motor_names: An array of motor names to read velocities from.
+
+        Returns:
+            A structured array containing the current velocities.
+
+        """
         return self.read("Present_Velocity", motor_names)
 
     def read_current(self, motor_names: pa.Array) -> pa.StructArray:
+        """Read the current current of the servos.
+
+        Args:
+            motor_names: An array of motor names to read currents from.
+
+        Returns:
+            A structured array containing the current currents.
+
+        """
         return self.read("Present_Current", motor_names)
 
     def write_goal_position(self, goal_position: pa.StructArray):
+        """Set the goal position for the servos.
+
+        Args:
+            goal_position: A structured array containing the goal positions.
+
+        """
         self.write("Goal_Position", goal_position)
 
     def write_goal_current(self, goal_current: pa.StructArray):
+        """Set the goal current for the servos.
+
+        Args:
+            goal_current: A structured array containing the goal currents.
+
+        """
         self.write("Goal_Current", goal_current)
 
     def write_position_p_gain(self, position_p_gain: pa.StructArray):
+        """Set the position P gain for the servos.
+
+        Args:
+            position_p_gain: A structured array containing the position P gains.
+
+        """
         self.write("Position_P_Gain", position_p_gain)
 
     def write_position_i_gain(self, position_i_gain: pa.StructArray):
+        """Set the position I gain for the servos.
+
+        Args:
+            position_i_gain: A structured array containing the position I gains.
+
+        """
         self.write("Position_I_Gain", position_i_gain)
 
     def write_position_d_gain(self, position_d_gain: pa.StructArray):
+        """Set the position D gain for the servos.
+
+        Args:
+            position_d_gain: A structured array containing the position D gains.
+
+        """
         self.write("Position_D_Gain", position_d_gain)

@@ -1,13 +1,13 @@
-from dora import Node
-import pyarrow as pa
 from enum import Enum
+
+import pyarrow as pa
+from dora import Node
 
 node = Node()
 
 
 class Action(Enum):
-    """
-    Action abstraction
+    """Action abstraction
     """
 
     YAW_RIGHT = ("yaw right", "movej", [0, 0, 0, 0, -0.1, 0, 0.1])
